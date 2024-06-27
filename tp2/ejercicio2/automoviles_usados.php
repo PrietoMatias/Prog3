@@ -3,6 +3,51 @@
 <head>
     <title>Gestión de Automóviles Usados</title>
 </head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        padding: 20px;
+        text-align: center;
+    }
+    input{
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 200px;
+        font-size: 16px;
+    
+    }
+    input[type="submit"] {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    ::placeholder {
+        color: #404043;
+        opacity: 1;
+    }
+    .boton{
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+    }
+    .boton_eliminar{
+        background-color: #f44336;
+        color: white;
+        cursor: pointer;
+    }
+    .boton_editar{
+        background-color: #ff9e18;
+        color: white;
+        cursor: pointer;
+    }
+    .Formulario{
+        width: 100%;
+        margin-top: 20px;
+    }
+    .Lista{
+        display:none;
+    }
+</style>
 <body>
     <h2>Gestión de Automóviles Usados</h2>
 
@@ -77,38 +122,44 @@
     ?>
 
     <!-- Formulario para agregar un nuevo automóvil usado -->
+    <div class="Formulario">
     <h2>Agregar Automóvil Usado</h2>
     <form action="automoviles_usados.php" method="POST">
         <input type="hidden" name="action" value="create">
-        Dominio: <input type="text" name="dominio"><br>
-        Marca: <input type="text" name="marca"><br>
-        Modelo: <input type="text" name="modelo"><br>
-        Año de Fabricación: <input type="text" name="año_fabricacion"><br>
-        Kilometraje: <input type="text" name="kilometraje"><br>
-        <input type="submit" value="Agregar Automóvil Usado">
+         <input type="text" name="dominio" placeholder="Patente"><br>
+         <input type="text" name="marca" placeholder="Marca"><br>
+         <input type="text" name="modelo" placeholder="Modelo"><br>
+         <input type="text" name="año_fabricacion" placeholder="Año de Fabricacion"><br>
+         <input type="text" name="kilometraje" placeholder="Kilometraje"><br>
+        <input class="boton" type="submit" onclick="
+        document.querySelector('.Lista').style.display = 'block';
+        " value="Agregar Automóvil Usado">
     </form>
+    </div>
 
     <!-- Lista de automóviles usados existentes -->
+    <div class="Lista">
     <h2>Lista de Automóviles Usados</h2>
+    
     <?php
     // Mostrar la lista actual de automóviles usados
     $sql = "SELECT dominio, marca, modelo, año_fabricacion, kilometraje FROM automoviles_usados";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            echo "Dominio: " . $row["dominio"]. " - Marca: " . $row["marca"]. " - Modelo: " . $row["modelo"]. " - Año de Fabricación: " . $row["año_fabricacion"]. " - Kilometraje: " . $row["kilometraje"]. " ";
+        while ($row = $result->fetch_assoc()) {
+            echo "Dominio: " . $row["dominio"] . " - Marca: " . $row["marca"] . " - Modelo: " . $row["modelo"] . " - Año de Fabricación: " . $row["año_fabricacion"] . " - Kilometraje: " . $row["kilometraje"] . " ";
             // Formulario para eliminar
             echo '<form style="display:inline;" action="automoviles_usados.php" method="POST">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="dominio" value="' . $row["dominio"] . '">
-                    <input type="submit" value="Eliminar">
+                    <input class="boton_eliminar" type="submit" value="Eliminar">
                   </form>';
             // Formulario para editar
             echo '<form style="display:inline;" action="automoviles_usados.php" method="POST">
                     <input type="hidden" name="action" value="edit">
                     <input type="hidden" name="dominio" value="' . $row["dominio"] . '">
-                    <input type="submit" value="Editar">
+                    <input class="boton_editar" type="submit" value="Editar">
                   </form><br>';
         }
     } else {
@@ -116,5 +167,6 @@
     }
     $conn->close(); // Cerrar la conexión
     ?>
+    </div>
 </body>
 </html>
